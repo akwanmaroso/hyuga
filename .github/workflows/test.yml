@@ -1,0 +1,20 @@
+name: "Test"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Generate Secret"
+        uses: akwanmaroso/hyuga@main
+        with:
+          VAULT_ADDRESS: ${{ secrets.VAULT_ADDRESS }}
+          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+          SECRET_PATH: ${{ secerts.SECRET_PATH }}
+      - name: "Read env"
+        run: |
+          cat .env
+        shell: bash
