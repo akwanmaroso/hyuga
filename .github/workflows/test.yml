@@ -13,7 +13,7 @@ jobs:
         with:
           VAULT_ADDRESS: ${{ secrets.VAULT_ADDRESS }}
           VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
-          SECRET_PATH: ${{ secerts.SECRET_PATH }}
+          SECRET_PATH: ${{ secrets.SECRET_PATH }}
       - name: "Read env"
         run: |
           cat .env
