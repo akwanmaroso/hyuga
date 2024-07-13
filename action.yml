@@ -15,4 +15,4 @@ inputs:
 
 runs:
   using: "docker"
-  image: "docker://akwanmaroso/hyuga:latest"
+  image: "docker://akwanmaroso/hyuga:v-1.1.0"
