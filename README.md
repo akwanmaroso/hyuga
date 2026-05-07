@@ -1,34 +1,37 @@
 # Hyuga
 
-Action for generate secret from vault into .env
+A GitHub Action that reads secrets from HashiCorp Vault (KV v2) and writes them to a `.env` file in your workspace.
 
-## How to use ?
+## Inputs
+
+| Input | Required | Default | Description |
+|-------|----------|---------|-------------|
+| `VAULT_ADDRESS` | Yes | — | URL of your Vault instance |
+| `VAULT_TOKEN` | Yes | — | Vault token for authentication |
+| `SECRET_PATH` | Yes | — | Path to the secret (e.g. `myapp/prod`) |
+| `KV_MOUNT_PATH` | No | `kv` | KV engine mount path |
+
+## Usage
 
 ```yaml
-name: "Test"
+steps:
+  - uses: actions/checkout@v4
 
-on:
-  push:
-    - master
+  - name: Generate .env from Vault
+    uses: akwanmaroso/hyuga@v-1.2.0
+    with:
+      VAULT_ADDRESS: ${{ secrets.VAULT_ADDRESS }}
+      VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+      SECRET_PATH: ${{ secrets.SECRET_PATH }}
+      # KV_MOUNT_PATH: secrets  # optional, defaults to "kv"
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: "Generate Secret"
-        uses: akwanmaroso/hyuga@main
-        with:
-          VAULT_ADDRESS: ${{ secrets.VAULT_ADDRESS }}
-          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
-          SECRET_PATH: ${{ secerts.SECRET_PATH }}
-      - name: "Read .env"
-        run: |
-          cat .env
-        shell: bash
+  - name: Use .env
+    run: cat .env
 ```
 
-## Next Feature ?
+The action writes all key-value pairs from the specified Vault secret to `.env` in the current workspace. String values are quoted; non-string values (numbers, booleans) are written as-is.
 
-- [ ] Allow using vault v1
-- [ ] Allow authentication in multiple method
+## Roadmap
+
+- [ ] Support KV v1
+- [ ] Support multiple authentication methods (AppRole, JWT, etc.)
