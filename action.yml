@@ -12,6 +12,10 @@ inputs:
   SECRET_PATH:
     description: "Path into the secret"
     required: true
+  KV_MOUNT_PATH:
+    description: "KV engine mount path"
+    required: false
+    default: "kv"
 
 runs:
   using: "docker"

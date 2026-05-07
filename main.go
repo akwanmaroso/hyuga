@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"reflect"
 	"time"
 
 	"github.com/hashicorp/vault-client-go"
@@ -24,24 +23,23 @@ func main() {
 		log.Fatal("failed to set token: ", err)
 	}
 
-	s, err := client.Secrets.KvV2Read(ctx, cfg.Path, vault.WithMountPath("kv"))
+	s, err := client.Secrets.KvV2Read(ctx, cfg.Path, vault.WithMountPath(cfg.MountPath))
 	if err != nil {
 		log.Fatal("failed to read secret: ", err)
 	}
 
 	f, err := os.Create(".env")
 	if err != nil {
-		log.Fatal("failed to create secret: ", err)
+		log.Fatal("failed to create .env file: ", err)
 	}
 	defer f.Close()
 
 	for key, value := range s.Data.Data {
 		valueStr := fmt.Sprintf("%v", value)
-		if reflect.TypeOf(value).Kind() == reflect.String {
-			valueStr = fmt.Sprintf("\"%v\"", value)
+		if s, ok := value.(string); ok {
+			valueStr = fmt.Sprintf("%q", s)
 		}
-		_, err := f.WriteString(fmt.Sprintf("%s=%s\n", key, valueStr))
-		if err != nil {
+		if _, err := fmt.Fprintf(f, "%s=%s\n", key, valueStr); err != nil {
 			log.Fatal("failed to write on .env: ", err)
 		}
 	}
