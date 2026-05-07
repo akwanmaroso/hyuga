@@ -19,4 +19,9 @@ inputs:
 
 runs:
   using: "docker"
-  image: "docker://akwanmaroso/hyuga:v-1.1.0"
+  image: "docker://akwanmaroso/hyuga:v-1.2.0"
+  env:
+    VAULT_ADDRESS: ${{ inputs.VAULT_ADDRESS }}
+    VAULT_TOKEN: ${{ inputs.VAULT_TOKEN }}
+    SECRET_PATH: ${{ inputs.SECRET_PATH }}
+    KV_MOUNT_PATH: ${{ inputs.KV_MOUNT_PATH }}
